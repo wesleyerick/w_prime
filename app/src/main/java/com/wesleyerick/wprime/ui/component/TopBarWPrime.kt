@@ -15,7 +15,7 @@ import com.wesleyerick.wprime.R
 @Composable
 fun TopBarWPrime(modifier: Modifier) {
     Row(
-        modifier = Modifier.fillMaxWidth().padding(8.dp),
+        modifier = Modifier.fillMaxWidth().padding(top = 32.dp, start = 8.dp, end = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Start
     ) {

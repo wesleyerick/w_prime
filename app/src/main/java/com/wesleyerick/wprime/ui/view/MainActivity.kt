@@ -15,9 +15,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.view.WindowCompat
 import androidx.lifecycle.Observer
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.wesleyerick.wprime.model.Banner
 import com.wesleyerick.wprime.model.Genres
+import com.wesleyerick.wprime.ui.Navigation
 import com.wesleyerick.wprime.ui.component.*
 import com.wesleyerick.wprime.ui.theme.WPrimeTheme
 import com.wesleyerick.wprime.util.mockList
@@ -40,6 +44,11 @@ class MainActivity : ComponentActivity() {
 
         viewModel.initApp()
 
+        // This app draws behind the system bars, so we want to handle fitting system windows
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        // Make statusBar transparent
+        window.statusBarColor = android.graphics.Color.TRANSPARENT
+
         setContent {
 
             var popularMoviesReady by remember { mutableStateOf(false) }
@@ -56,7 +65,8 @@ class MainActivity : ComponentActivity() {
                     popularTvReady &&
                     topRatedTvReady
                 ) {
-                    BaseScreen(popularMovies, upcomingMovies, menuItems, popularTv, topRatedTv)
+//                    MainScreen(popularMovies, upcomingMovies, menuItems, popularTv, topRatedTv)
+                    Navigation(popularMovies, upcomingMovies, menuItems, popularTv, topRatedTv)
                 } else {
                     SplashScreen()
                 }
@@ -93,10 +103,13 @@ class MainActivity : ComponentActivity() {
             viewModel.topRatedTvList.observe(this, topRatedListObserver)
         }
     }
+
+    override fun onBackPressed() {} // = BackPress disabled
 }
 
 @Composable
-fun BaseScreen(
+fun MainScreen(
+    navController: NavController,
     popularMovies: List<Banner>,
     upcomingMovies: List<Banner>,
     menuItems: Genres,
@@ -120,10 +133,10 @@ fun BaseScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 BannerTop(popularMovies[topBannerNumber], isMenuOpened)
-                BannerRow(popularTv, "Séries em Alta")
-                BannerRow(popularMovies, "Filmes em Alta")
-                BannerRow(upcomingMovies, "Lançamentos")
-                BannerRow(topRatedTv, "Séries bem avaliadas")
+                BannerRow(navController, popularTv, "Séries em Alta")
+                BannerRow(navController, popularMovies, "Filmes em Alta")
+                BannerRow(navController, upcomingMovies, "Lançamentos")
+                BannerRow(navController, topRatedTv, "Séries bem avaliadas")
             }
         }
         TopBarWPrime(modifier = Modifier
@@ -144,6 +157,6 @@ fun BaseScreen(
 @Composable
 fun DefaultPreview() {
     WPrimeTheme {
-        BaseScreen(mockList, mockList, Genres(mockMenuItems), mockList, mockList)
+        MainScreen(navController = rememberNavController(), mockList, mockList, Genres(mockMenuItems), mockList, mockList)
     }
 }

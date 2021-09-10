@@ -14,18 +14,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberImagePainter
-import com.wesleyerick.wprime.R
 import com.wesleyerick.wprime.api.ApiConst.images_endpoint
 import com.wesleyerick.wprime.model.Banner
+import com.wesleyerick.wprime.ui.navigation.Screen
 import com.wesleyerick.wprime.util.mockList
 
 @Composable
-fun BannerRow(banners: List<Banner>, title: String) {
+fun BannerRow(navController: NavController, banners: List<Banner>, title: String) {
+
     Column {
         Spacer(modifier = Modifier.size(8.dp))
         Text(
@@ -37,26 +38,34 @@ fun BannerRow(banners: List<Banner>, title: String) {
         Spacer(modifier = Modifier.size(8.dp))
         LazyRow {
             items(banners) { banner ->
-                BannerCard(banner) {
-                    println("=====> TESTE BannerRow CLICK -> ${banner.id}")
-                }
+
+                BannerCard(navController, banner)
             }
         }
     }
 }
 
 @Composable
-fun BannerCard(banner: Banner, onClick: () -> Unit) {
+fun BannerCard(navController: NavController, banner: Banner) {
     Card(
         modifier =
         Modifier
             .padding(8.dp)
             .width(150.dp)
-            .clickable { onClick }
+            .clickable {
+                navController.navigate(
+                    Screen.BannerDetailScreen.withArgs(
+                        banner.id.toString(),
+                        banner.title.toString(),
+                        banner.poster_path.toString().drop(1), // .drop = remove first char "/" because it's crash navigation route
+                        banner.overview.toString()
+                    )
+                )
+            }
     ) {
         Column {
             Image(
-            painter = rememberImagePainter("$images_endpoint${banner.poster_path}"),
+                painter = rememberImagePainter("$images_endpoint${banner.poster_path}"),
 //                painter = painterResource(id = R.drawable.space_jam),
                 contentScale = ContentScale.Crop,
                 contentDescription = banner.title,
@@ -86,6 +95,6 @@ fun BannerCard(banner: Banner, onClick: () -> Unit) {
     name = "Dark Mode"
 )
 @Composable
-fun PreviewBannerRow(){
-    BannerRow(banners = mockList, title = "Recomendado")
+fun PreviewBannerRow() {
+    BannerRow(navController = rememberNavController(), banners = mockList, title = "Recomendado")
 }

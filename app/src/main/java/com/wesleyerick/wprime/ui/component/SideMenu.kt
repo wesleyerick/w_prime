@@ -60,14 +60,14 @@ fun MenuItem(genre: Genre, modifier: Modifier) {
 fun LogoBackground() {
     Surface(
         modifier = Modifier
-            .height(56.dp)
+            .height(88.dp)
             .fillMaxWidth(),
         color = notSoDark
     ) {
         Text(
             text = "Prime",
             modifier = Modifier
-                .padding(start = 56.dp, top = 8.dp)
+                .padding(start = 56.dp, top = 32.dp)
                 .fillMaxSize(),
             color = MaterialTheme.colors.primaryVariant,
             textAlign = TextAlign.Justify,

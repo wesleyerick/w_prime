@@ -7,11 +7,11 @@ import com.wesleyerick.wprime.model.Banners
 import com.wesleyerick.wprime.model.UpcomingBanners
 import retrofit2.Response
 
-class MainRepository(
+open class MainRepository(
     private val api: ApiService,
     private val const: ApiConst,
 ) {
-    suspend fun getPopularMovies(): Response<Banners>{
+    open suspend fun getPopularMovies(): Response<Banners>{
         return api.getPopularMovies(
             api_key = const.api_key,
             language = const.language,
