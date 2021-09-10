@@ -3,7 +3,7 @@
 App criado para estudos usando de referência o Netflix e o HBO Max, consumindo a API do https://themoviedb.org/
 
 Utilizado:
-- Jetpack Compose
+- Jetpack Compose (com Navigation)
 - Koin
 - Coil
 - Refrofit
